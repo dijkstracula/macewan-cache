@@ -1,3 +1,11 @@
+/* This program demonstrates the effects of cacheline-level contention on a
+ * multi-threaded program.  Each thread modifies an independent index in a
+ * shared array; however, because multiple `int` values can fit on a single
+ * cacheline, the hardware cache coherence protocol has to keep invalidating
+ * the other CPU's caches, leading to performance problems.
+ *
+ * author: taylorn5
+ */
 #define _GNU_SOURCE
 #include <stdio.h>
 #include <stdlib.h>

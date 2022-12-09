@@ -1,3 +1,10 @@
+/* This program addresses the so-called false sharing observed in sharing.c,
+ * by increasing the size of each element in the array so that they are all
+ * on their own cacheline.
+ *
+ * author: taylorn5
+ */
+
 #define _GNU_SOURCE
 #include <stdio.h>
 #include <stdlib.h>

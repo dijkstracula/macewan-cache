@@ -7,7 +7,7 @@ all: read_a_byte read_a_string itertest sharing sharing_fixed
 
 read_a_byte: read_a_byte.c
 read_a_string: read_a_string.c
-itertest: itertest.c
+itertest: itertest.c utils.c
 
 sharing: sharing.c utils.c
 sharing_fixed: sharing_fixed.c utils.c

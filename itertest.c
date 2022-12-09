@@ -24,36 +24,10 @@
 #include <string.h>
 #include <time.h>
 
+#include "utils.h"
+
 /* How many distinct experiments to run (we'll average all their results */
 #define ITERS 20
-
-/* Returns the number of seconds passed between the two timespecs. */
-double diff_timespec(const struct timespec *time1, const struct timespec *time0) {
-      return (time1->tv_sec - time0->tv_sec) + (time1->tv_nsec - time0->tv_nsec) / 1000000000.0;
-}
-
-/* The following function and preprocessor directives make error-checking
- * memory allocations a bit nicer.  Figuring out what this does would be good
- * practice in understanding C macros!
- */
-
-/* Wraps calls to malloc(): if it fails, exit the program. */
-void *xmalloc(size_t sz, const char *function, uint64_t line) {
-    void *ret = calloc(sz, 1);
-    if (!ret) {
-        fprintf(stderr, "Allocation for %ld bytes failed in %s() on line %ld!\n", sz, function, line);
-        exit(1);
-    }
-    return ret;
-}
-
-/* a macro that calls xmalloc, with the name of the function and line number
- * already inserted in the function call (recall that __FUNCTION__ and __LINE__
- * are built-in C macros - they get assigned values whereever they're used,
- * so they'll be assigned values whereever XMALLOC is expanded.)
- */
-#define XMALLOC(sz) xmalloc(sz, __FUNCTION__, __LINE__)
-
 
 /* How big is our pool of struct nodes?  See doit_list for details. */
 #define POOLSIZE 32
@@ -95,7 +69,7 @@ double doit_list(uint64_t size) {
      */
     struct node *node_pool[POOLSIZE];
     for (i = 0; i < POOLSIZE; i++) {
-        node_pool[i] = XMALLOC(sizeof(struct node));
+        node_pool[i] = MALLOC(sizeof(struct node));
     }
 
     /* 1. Create a list of a given size... */
@@ -106,13 +80,13 @@ double doit_list(uint64_t size) {
         struct node *n = node_pool[chosen];
 
         /* Assign a value to the node's value. */
-        n->val = XMALLOC(sizeof(int));
+        n->val = MALLOC(sizeof(int));
         n->next = head;
         head = n;
 
         /* Replace the node we took out of the pool with
          * a freshly-allocated copy. */
-        node_pool[chosen] = XMALLOC(sizeof(struct node));
+        node_pool[chosen] = MALLOC(sizeof(struct node));
     }
 
     /* 2. OK, now do our benchmark... */
@@ -157,7 +131,7 @@ double doit_array(uint64_t size) {
     double results[ITERS];
 
     /* 1. Create an array of a given size... */
-    int *a = XMALLOC(size * sizeof(int));
+    int *a = MALLOC(size * sizeof(int));
 
     /* 2. OK, now do our benchmark... */
     for (int j = 0; j < ITERS; j++) {
